@@ -63,9 +63,9 @@ $primeiraConexao = new ConexaoWooCommerce(
 $primeiraConexao->criarConexao();
 $primeiraConexao->pegarProdutos();
 $primeiraConexao->enviarProduto(
-    'Renato Teste',
+    'Mateus la vai Teste',
     '22.88',
-    'Renato teste 2',
-    'Renato teste 3',
+    'Mateus la vai teste 2',
+    'Mateus la vai teste 3',
     'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_front.jpg'
 );
