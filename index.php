@@ -1,29 +1,71 @@
 <?php
-
 require __DIR__ . '/vendor/autoload.php';
-
 use Automattic\WooCommerce\Client;
 
-class teste
+class ConexaoWooCommerce
 {
-    public $url = 'http://plugloja.com.br/site1/';
-    public $consumer_key = 'ck_32633dec0c416eca54beaeed87e9c644b4e9b986';
-    public $consumer_secret = 'cs_69d9803a224a050d7db94b23f3fadcb7ec020adf';
-    public $options = ['version' => 'wc/v3'];
+    private static $url;
+    private static $consumer_key;
+    private static $consumer_secret;
+    private static $woocommerce;
 
-    public function criarConexao($url, $consumer_key, $consumer_secret, $options)
+    function __construct(string $url, string $consumer_key, string $consumer_secret)
     {
-        return $woocommerce = new Client($url, $consumer_key, $consumer_secret, $options);
+        self::$url = $url;
+        self::$consumer_key = $consumer_key;
+        self::$consumer_secret = $consumer_secret;
+    }
+
+    public function criarConexao()
+    {
+        self::$woocommerce = new Client(self::$url, self::$consumer_key, self::$consumer_secret);
     }
 
     public function pegarProdutos()
     {
-        print_r($woocommerce->get('products'));
+        print_r(self::$woocommerce->get('products'));
+    }
+
+    public function enviarProduto($name, $preco, $descricao, $pequenaDescricao, $imagem1)
+    {
+        $data = [
+            'name' => $name,
+            'type' => 'simple',
+            'regular_price' => $preco,
+            'description' => $descricao,
+            'short_description' => $pequenaDescricao,
+            'categories' => [
+                [
+                    'id' => 9
+                ],
+                [
+                    'id' => 14
+                ]
+            ],
+            'images' => [
+                [
+                    'src' => $imagem1
+                ],
+                [
+                    'src' => 'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_back.jpg'
+                ]
+            ]
+        ];
+        print_r(self::$woocommerce->post('products', $data));
     }
 }
 
-$url = 'http://plugloja.com.br/site1/';
-$consumer_key = 'ck_32633dec0c416eca54beaeed87e9c644b4e9b986';
-$consumer_secret = 'cs_69d9803a224a050d7db94b23f3fadcb7ec020adf';
-$options = ['version' => 'wc/v3'];
-teste::criarConexao($url, $consumer_key, $consumer_secret, $options);
+$primeiraConexao = new ConexaoWooCommerce(
+    'http://plugloja.com.br/site1/',
+    'ck_a41a6f84473279cab566c9607b0890a8f4beb92d',
+    'cs_486988660da744885dd187eeb59738bc3330a828'
+);
+$primeiraConexao->criarConexao();
+$primeiraConexao->pegarProdutos();
+$primeiraConexao->enviarProduto(
+    'Renato Teste',
+    '22.88',
+    'Renato teste 2',
+    'Renato teste 3',
+    'http://demo.woothemes.com/woocommerce/wp-content/uploads/sites/56/2013/06/T_2_front.jpg'
+);
